@@ -1,0 +1,2012 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "xAPI 9274.1.1 Base Standard for LRSs",
+    "description": "IEEE Standard for Learning Technology— JavaScript Object Notation (JSON) Data Model Format and Representational State Transfer (RESTful) Web Service for Learner Experience Data Tracking and Access",
+    "license": {
+      "name": "Apache License 2.0"
+    },
+    "version": "2.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "AccountInfo": {
+        "type": "object",
+        "required": [
+          "homePage",
+          "name"
+        ],
+        "properties": {
+          "homePage": {
+            "$ref": "#/components/schemas/WebUri"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique id or name used to log in to this account.\nThis is based on FOAF's accountName."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Activities": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ActivityObject"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityObject"
+            }
+          }
+        ],
+        "description": "Every value in the contextActivities Object shall be either a single Activity Object\nor an array of Activity Objects"
+      },
+      "Activity": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "definition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ActivityDefinition"
+              }
+            ]
+          },
+          "id": {
+            "$ref": "#/components/schemas/Iri"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ActivityDefinition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedActivityDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/SimpleActivityDefinition"
+          }
+        ]
+      },
+      "ActivityObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activity"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Activity"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "ActorObject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedActorObject"
+          },
+          {
+            "$ref": "#/components/schemas/UntaggedActorObject"
+          }
+        ]
+      },
+      "Agent": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/AgentMBox"
+          },
+          {
+            "$ref": "#/components/schemas/AgentMBoxSha1sum"
+          },
+          {
+            "$ref": "#/components/schemas/AgentOpenId"
+          },
+          {
+            "$ref": "#/components/schemas/AgentAccount"
+          }
+        ]
+      },
+      "AgentAccount": {
+        "type": "object",
+        "required": [
+          "account"
+        ],
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/AccountInfo"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique id or name used to log in to this account.\nThis is based on FOAF's accountName."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AgentMBox": {
+        "type": "object",
+        "required": [
+          "mbox"
+        ],
+        "properties": {
+          "mbox": {
+            "$ref": "#/components/schemas/MBox"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique id or name used to log in to this account.\nThis is based on FOAF's accountName."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AgentMBoxSha1sum": {
+        "type": "object",
+        "required": [
+          "mbox_sha1sum"
+        ],
+        "properties": {
+          "mbox_sha1sum": {
+            "$ref": "#/components/schemas/MBoxSha1sum"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique id or name used to log in to this account.\nThis is based on FOAF's accountName."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AgentObject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedAgentObject"
+          },
+          {
+            "$ref": "#/components/schemas/Agent"
+          }
+        ]
+      },
+      "AgentOpenId": {
+        "type": "object",
+        "required": [
+          "openid"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The unique id or name used to log in to this account.\nThis is based on FOAF's accountName."
+          },
+          "openid": {
+            "$ref": "#/components/schemas/OpenId"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Attachment": {
+        "type": "object",
+        "required": [
+          "usageType",
+          "display",
+          "contentType",
+          "length",
+          "sha2"
+        ],
+        "properties": {
+          "contentType": {
+            "type": "string",
+            "description": "The content type of the Attachment."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "display": {
+            "$ref": "#/components/schemas/LanguageMap"
+          },
+          "fileUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "An IRL at which the Attachment data can be retrieved, or from which it used to be retrievable."
+          },
+          "length": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The length of the Attachment data in octets.",
+            "minimum": 0
+          },
+          "sha2": {
+            "type": "string",
+            "description": "The SHA-2 (FIPS PUB 180-2) hash of the Attachment data.\nThis property is always required, even if fileURL is also specified."
+          },
+          "usageType": {
+            "$ref": "#/components/schemas/Iri"
+          }
+        }
+      },
+      "ChoiceActivityDefinition": {
+        "type": "object",
+        "description": "An interaction with a number of possible choices from which the learner can select.\nThis includes interactions in which the learner can select only one answer from the\nlist and those where the learner can select multiple items.",
+        "required": [
+          "correctResponsesPattern",
+          "choices"
+        ],
+        "properties": {
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of item ids delimited by [,]. If the response contains only one item, the delimiter shall not be used."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Context": {
+        "type": "object",
+        "description": "Property to add contextual information to a Statement.\nIt can store information such as the instructor for an experience,\nif this experience happened as part of a team-based Activity,\nor how an experience fits into some broader activity.",
+        "properties": {
+          "contextActivities": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextActivities"
+              }
+            ]
+          },
+          "contextAgents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextAgentObject"
+            },
+            "description": "Collection of Objects describing relationship(s) between Agent(s) and the current Statement.\nZero or more Relevant Type IRIs are used to categorize these relationship(s)"
+          },
+          "contextGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextGroupObject"
+            },
+            "description": "Collection of Objects describing relationship(s) between Identified or Anonymous Group(s) and the current Statement.\nZero or more Relevant Type IRIs are used to categorize these relationship(s)"
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of any other domain-specific context relevant to this Statement.\nFor example, in a flight simulator altitude, airspeed, wind, attitude, GPS coordinates might all be relevant",
+            "additionalProperties": {}
+          },
+          "instructor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ActorObject"
+              }
+            ]
+          },
+          "language": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ]
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform used in the experience of this learning activity."
+          },
+          "registration": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The registration that the Statement is associated with.\nThis is a UUID."
+          },
+          "revision": {
+            "type": "string",
+            "description": "Revision of the learning activity associated with this Statement. Format is free."
+          },
+          "statement": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaybeTaggedStatementRef"
+              }
+            ]
+          },
+          "team": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GroupObject"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContextActivities": {
+        "type": "object",
+        "description": "A map of the types of learning activity context that this Statement is related to.",
+        "properties": {
+          "category": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activities"
+              }
+            ]
+          },
+          "grouping": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activities"
+              }
+            ]
+          },
+          "other": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activities"
+              }
+            ]
+          },
+          "parent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activities"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContextAgent": {
+        "type": "object",
+        "description": "Collection of Objects describing relationship(s) between Agent(s) and the current Statement.\nZero or more Relevant Type IRIs are used to categorize these relationship(s)",
+        "required": [
+          "agent"
+        ],
+        "properties": {
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "relevantTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A collection of 1 or more Relevant Type(s) used to characterize the relationship between the Statement and the Agent.\nIf not provided, only a generic relationship is intended (not recommended)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContextAgentObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextAgent"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "contextAgent"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "ContextGroup": {
+        "type": "object",
+        "description": "Collection of Objects describing relationship(s) between Identified or Anonymous Group(s) and the current Statement.\nZero or more Relevant Type IRIs are used to categorize these relationship(s)",
+        "required": [
+          "group"
+        ],
+        "properties": {
+          "group": {
+            "$ref": "#/components/schemas/GroupObject"
+          },
+          "relevantTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A collection of 1 or more Relevant Type(s) used to characterize the relationship between the Statement and the Agent.\nIf not provided, only a generic relationship is intended (not recommended)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContextGroupObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextGroup"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "contextGroup"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "FillInActivityDefinition": {
+        "type": "object",
+        "description": "An interaction which requires the learner to supply a short response in the form of one\nor more strings of characters. Typically, the correct response consists of part of a word,\none word or a few words. \"Short\" means that the correct responses pattern and learner response\nstrings are normally be 250 characters or less.",
+        "required": [
+          "correctResponsesPattern"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of responses delimited by [,]. If the response contains only one item,\nthe delimiter shall not be used."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Group": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/GroupMBox"
+          },
+          {
+            "$ref": "#/components/schemas/GroupMBoxSha1sum"
+          },
+          {
+            "$ref": "#/components/schemas/GroupOpenid"
+          },
+          {
+            "$ref": "#/components/schemas/GroupAccount"
+          },
+          {
+            "$ref": "#/components/schemas/GroupAnonymous"
+          }
+        ]
+      },
+      "GroupAccount": {
+        "type": "object",
+        "required": [
+          "account"
+        ],
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/AccountInfo"
+          },
+          "member": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentObject"
+            },
+            "description": "The members of this Group. This is an unordered list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Group."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupAnonymous": {
+        "type": "object",
+        "required": [
+          "member"
+        ],
+        "properties": {
+          "member": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentObject"
+            },
+            "description": "The members of this Group. This is an unordered list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Group."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupMBox": {
+        "type": "object",
+        "required": [
+          "mbox"
+        ],
+        "properties": {
+          "mbox": {
+            "$ref": "#/components/schemas/MBox"
+          },
+          "member": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentObject"
+            },
+            "description": "The members of this Group. This is an unordered list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Group."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupMBoxSha1sum": {
+        "type": "object",
+        "required": [
+          "mbox_sha1sum"
+        ],
+        "properties": {
+          "mbox_sha1sum": {
+            "$ref": "#/components/schemas/MBoxSha1sum"
+          },
+          "member": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentObject"
+            },
+            "description": "The members of this Group. This is an unordered list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Group."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Group"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "GroupOpenid": {
+        "type": "object",
+        "required": [
+          "openid"
+        ],
+        "properties": {
+          "member": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentObject"
+            },
+            "description": "The members of this Group. This is an unordered list."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the Group."
+          },
+          "openid": {
+            "$ref": "#/components/schemas/OpenId"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InteractionComponent": {
+        "type": "object",
+        "description": "Interaction Component Lists Item",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Identifies the interaction component within the list."
+          }
+        }
+      },
+      "Iri": {
+        "type": "string",
+        "format": "uri"
+      },
+      "Language": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "LanguageMap": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "LikertActivityDefinition": {
+        "type": "object",
+        "description": "An interaction which asks the learner to select from a discrete set of choices on a scale",
+        "required": [
+          "correctResponsesPattern",
+          "scale"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A single item id from the scale."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "scale": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "LongFillInActivityDefinition": {
+        "type": "object",
+        "description": "An interaction which requires the learner to supply a response in the form of a long string of characters.\n\"Long\" means that the correct responses pattern and learner response strings are normally be more than 250 characters.",
+        "required": [
+          "correctResponsesPattern"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of responses delimited by [,]. If the response contains only one item,\nthe delimiter shall not be used."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "MBox": {
+        "$ref": "#/components/schemas/Iri"
+      },
+      "MBoxSha1sum": {
+        "type": "string",
+        "description": "The hex-encoded SHA1 hash of a mailto IRI (i.e. the value of an mbox property).\nAn LRS may include Agents with a matching hash when a request is based on an mbox."
+      },
+      "MatchingActivityDefinition": {
+        "type": "object",
+        "description": "An interaction where the learner is asked to match items in one set (the source set) to items\nin another set (the target set). Items do not have to pair off exactly and it is possible for\nmultiple or zero source items to be matched to a given target and vice versa.",
+        "required": [
+          "correctResponsesPattern",
+          "source",
+          "target"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of matching pairs, where each pair consists of a source item id followed by a target item id.\nItems can appear in multiple (or zero) pairs. Items within a pair are delimited by [.].\nPairs are delimited by [,]."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "source": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "target": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "MaybeTaggedStatementRef": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedStatementRef"
+          },
+          {
+            "$ref": "#/components/schemas/StatementRef"
+          }
+        ],
+        "description": "This type exists to work around the missing doc for StatementRef in\nthe statement context."
+      },
+      "NumericActivityDefinition": {
+        "type": "object",
+        "description": "Any interaction which requires a numeric response from the learner.",
+        "required": [
+          "correctResponsesPattern"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A range of numbers represented by a minimum and a maximum delimited by [:].\nWhere the range does not have a maximum or does not have a minimum,\nthat number is omitted but the delimiter is still used.\nE.g. [:]4 indicates a maximum for 4 and no minimum. Where the correct response or\nlearner's response is a single number rather than a range,\nthe single number with no delimiter may be used."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Object": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedObject"
+          },
+          {
+            "$ref": "#/components/schemas/Activity"
+          }
+        ]
+      },
+      "OpenId": {
+        "$ref": "#/components/schemas/WebUri"
+      },
+      "OtherActivityDefinition": {
+        "type": "object",
+        "description": "Another type of interaction that does not fit into a special definition.",
+        "required": [
+          "correctResponsesPattern"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Any format is valid within this string as appropriate for the type of interaction."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "PerformanceActivityDefinition": {
+        "type": "object",
+        "description": "An interaction that requires the learner to perform a task that requires multiple steps.",
+        "required": [
+          "correctResponsesPattern",
+          "steps"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of steps containing a step ids and the response to that step.\nStep ids are separated from responses by [.]. Steps are delimited by [,].\nThe response can be a String as in a fill-in interaction or a number range as in a numeric interaction."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Score": {
+        "type": "object",
+        "description": "Represents the outcome of a graded Activity achieved by an Agent.",
+        "properties": {
+          "max": {
+            "type": "number",
+            "format": "float",
+            "description": "The highest possible score for the experience described by the Statement.\nDecimal number greater than min (if present)"
+          },
+          "min": {
+            "type": "number",
+            "format": "float",
+            "description": "The lowest possible score for the experience described by the Statement.\nDecimal number less than max (if present)"
+          },
+          "raw": {
+            "type": "number",
+            "format": "float",
+            "description": "The score achieved by the Actor in the experience described by the Statement.\nThis is not modified by any scaling or normalization.\nDecimal number between min and max (if present, otherwise unrestricted), inclusive."
+          },
+          "scaled": {
+            "type": "number",
+            "format": "float",
+            "description": "The score related to the experience as modified by scaling and/or normalization.\nRecommended"
+          }
+        }
+      },
+      "SequencingActivityDefinition": {
+        "type": "object",
+        "description": "An interaction where the learner is asked to order items in a set.",
+        "required": [
+          "correctResponsesPattern",
+          "choices"
+        ],
+        "properties": {
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractionComponent"
+            }
+          },
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An ordered list of item ids delimited by [,]."
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleActivityDefinition": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Statement": {
+        "type": "object",
+        "required": [
+          "actor",
+          "verb",
+          "object"
+        ],
+        "properties": {
+          "actor": {
+            "$ref": "#/components/schemas/ActorObject"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            },
+            "description": "Headers for Attachments to the Statement"
+          },
+          "authority": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ActorObject"
+              }
+            ]
+          },
+          "context": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Context"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID assigned by LRS if not set by the Learning Record Provider."
+          },
+          "object": {
+            "type": "object",
+            "description": "Activity, Agent, or another Statement that is the Object of the Statement."
+          },
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementResult"
+              }
+            ]
+          },
+          "stored": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when this Statement was recorded. Set by LRS.\n\nNot Recommended"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the events described within this Statement occurred\n(it can represent any point during an experience, not necessarily the beginning or end). Set by the LRS if not provided.\n\nNot Recommended"
+          },
+          "verb": {
+            "$ref": "#/components/schemas/Verb"
+          },
+          "version": {
+            "type": "string",
+            "description": "The Statement's associated xAPI version, formatted according to Semantic Versioning 1.0.0.\n\nNot Recommended"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatementRef": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The UUID of a Statement."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatementResult": {
+        "type": "object",
+        "description": "Represents a measured outcome related to the Statement in which it is included.",
+        "properties": {
+          "completion": {
+            "type": "boolean",
+            "description": "Indicates whether or not the Activity was completed."
+          },
+          "duration": {
+            "type": "string",
+            "description": "Period of time over which the Statement occurred."
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed.",
+            "additionalProperties": {}
+          },
+          "response": {
+            "type": "string",
+            "description": "A response appropriately formatted for the given Activity."
+          },
+          "score": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Score"
+              }
+            ]
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Indicates whether or not the attempt on the Activity was successful."
+          }
+        }
+      },
+      "SubObject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedSubObject"
+          },
+          {
+            "$ref": "#/components/schemas/Activity"
+          }
+        ]
+      },
+      "SubStatement": {
+        "type": "object",
+        "required": [
+          "actor",
+          "verb",
+          "object"
+        ],
+        "properties": {
+          "actor": {
+            "$ref": "#/components/schemas/ActorObject"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            },
+            "description": "Headers for Attachments to the Statement"
+          },
+          "context": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Context"
+              }
+            ]
+          },
+          "object": {
+            "$ref": "#/components/schemas/SubObject"
+          },
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementResult"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the events described within this Statement occurred\n(it can represent any point during an experience, not necessarily the beginning or end).\nSet by the LRS if not provided.\n\nNot Recommended"
+          },
+          "verb": {
+            "$ref": "#/components/schemas/Verb"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TaggedActivityDefinition": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "choice"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FillInActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "fill-in"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LikertActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "likert"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LongFillInActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "long-fill-in"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MatchingActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "matching"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumericActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "numeric"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OtherActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "other"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PerformanceActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "performance"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SequencingActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "sequencing"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TrueFalseActivityDefinition"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "interactionType"
+                ],
+                "properties": {
+                  "interactionType": {
+                    "type": "string",
+                    "enum": [
+                      "true-false"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "interactionType"
+        }
+      },
+      "TaggedActorObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Agent"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Agent"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Group"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "TaggedAgentObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Agent"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Agent"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "TaggedObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Agent"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Agent"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Group"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activity"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Activity"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubStatement"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "SubStatement"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementRef"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "StatementRef"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "TaggedStatementRef": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementRef"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "StatementRef"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "TaggedSubObject": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Agent"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Agent"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Group"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Activity"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "Activity"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementRef"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "objectType"
+                ],
+                "properties": {
+                  "objectType": {
+                    "type": "string",
+                    "enum": [
+                      "StatementRef"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "discriminator": {
+          "propertyName": "objectType"
+        }
+      },
+      "TrueFalseActivityDefinition": {
+        "type": "object",
+        "description": "An interaction with two possible responses: true or false.",
+        "required": [
+          "correctResponsesPattern"
+        ],
+        "properties": {
+          "correctResponsesPattern": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Either true or false"
+          },
+          "description": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed",
+            "additionalProperties": {}
+          },
+          "moreInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "name": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "UntaggedActorObject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Agent"
+          },
+          {
+            "$ref": "#/components/schemas/Group"
+          }
+        ]
+      },
+      "Verb": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "display": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LanguageMap"
+              }
+            ]
+          },
+          "id": {
+            "$ref": "#/components/schemas/Iri"
+          }
+        }
+      },
+      "WebUri": {
+        "$ref": "#/components/schemas/Iri"
+      }
+    }
+  }
+}

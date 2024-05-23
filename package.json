@@ -1,0 +1,14 @@
+{
+  "name": "xapi-openapi",
+  "packageManager": "yarn@4.2.2",
+  "scripts": {
+    "build": "yarn gen && yarn fix",
+    "gen": "openapi-ts -i ./openapi.json -o .tmp && cp .tmp/types.gen.ts types.ts",
+    "fix": "replace-in-file '/export type [a-z].*/g' '' types.ts --is-regex"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.46.1",
+    "replace-in-file": "^7.1.0",
+    "typescript": "^5.4.5"
+  }
+}
