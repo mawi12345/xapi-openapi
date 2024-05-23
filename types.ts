@@ -70,6 +70,8 @@ export type AgentOpenId = {
     openid: Iri;
 };
 
+export type AnyObject = TaggedObject | Activity;
+
 export type Attachment = {
     /**
      * The content type of the Attachment.
@@ -426,8 +428,6 @@ export type NumericActivityDefinition = {
     type?: Iri;
 };
 
-export type Object = TaggedObject | Activity;
-
 export type OpenId = Iri;
 
 /**
@@ -546,12 +546,7 @@ export type Statement = {
      * UUID assigned by LRS if not set by the Learning Record Provider.
      */
     id?: string;
-    /**
-     * Activity, Agent, or another Statement that is the Object of the Statement.
-     */
-    object: {
-        [key: string]: unknown;
-    };
+    object: AnyObject;
     result?: StatementResult;
     /**
      * Timestamp of when this Statement was recorded. Set by LRS.

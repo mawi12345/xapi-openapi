@@ -199,6 +199,16 @@
         },
         "additionalProperties": false
       },
+      "AnyObject": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TaggedObject"
+          },
+          {
+            "$ref": "#/components/schemas/Activity"
+          }
+        ]
+      },
       "Attachment": {
         "type": "object",
         "required": [
@@ -987,16 +997,6 @@
         },
         "additionalProperties": false
       },
-      "Object": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/TaggedObject"
-          },
-          {
-            "$ref": "#/components/schemas/Activity"
-          }
-        ]
-      },
       "OpenId": {
         "$ref": "#/components/schemas/WebUri"
       },
@@ -1267,8 +1267,7 @@
             "description": "UUID assigned by LRS if not set by the Learning Record Provider."
           },
           "object": {
-            "type": "object",
-            "description": "Activity, Agent, or another Statement that is the Object of the Statement."
+            "$ref": "#/components/schemas/AnyObject"
           },
           "result": {
             "allOf": [

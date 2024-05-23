@@ -1491,16 +1491,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wml-typescript@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "wml-typescript@workspace:."
-  dependencies:
-    "@hey-api/openapi-ts": "npm:^0.46.1"
-    replace-in-file: "npm:^7.1.0"
-    typescript: "npm:^5.4.5"
-  languageName: unknown
-  linkType: soft
-
 "wordwrap@npm:^1.0.0":
   version: 1.0.0
   resolution: "wordwrap@npm:1.0.0"
@@ -1536,6 +1526,16 @@ __metadata:
   checksum: 10c0/56fece1a4018c6a6c8e28fbc88c87e0fbf4ea8fd64fc6c63b18f4acc4bd13e0ad2515189786dd2c30d3eec9663d70f4ecf699330002f8ccb547e4a18231fc9f0
   languageName: node
   linkType: hard
+
+"xapi-openapi@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "xapi-openapi@workspace:."
+  dependencies:
+    "@hey-api/openapi-ts": "npm:^0.46.1"
+    replace-in-file: "npm:^7.1.0"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
 
 "y18n@npm:^5.0.5":
   version: 5.0.8
