@@ -1646,16 +1646,6 @@
             "type": "boolean",
             "description": "If true, the LRS uses the multipart response format and includes all attachments as described previously. If false, the LRS sends the prescribed response with Content-Type application/json and does not send attachment data."
           },
-          "ci": {
-            "type": "string",
-            "format": "uuid",
-            "description": "None standard to support paging"
-          },
-          "ct": {
-            "type": "string",
-            "format": "date-time",
-            "description": "None standard to support paging"
-          },
           "format": {
             "allOf": [
               {

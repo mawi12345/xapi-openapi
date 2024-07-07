@@ -747,14 +747,6 @@ export type StatementsParams = {
      * If true, the LRS uses the multipart response format and includes all attachments as described previously. If false, the LRS sends the prescribed response with Content-Type application/json and does not send attachment data.
      */
     attachments?: boolean;
-    /**
-     * None standard to support paging
-     */
-    ci?: string;
-    /**
-     * None standard to support paging
-     */
-    ct?: string;
     format?: StatementFormat;
     /**
      * Maximum number of Statements to return. 0 indicates return the maximum the server allows.
