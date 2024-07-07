@@ -13,3 +13,4 @@
 .pnp.*
 
 .tmp
+node_modules

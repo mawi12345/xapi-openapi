@@ -11,6 +11,26 @@
   "paths": {},
   "components": {
     "schemas": {
+      "About": {
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "properties": {
+          "extensions": {
+            "type": "object",
+            "description": "A map of other properties as needed.",
+            "additionalProperties": {}
+          },
+          "version": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "xAPI versions this LRS supports"
+          }
+        }
+      },
       "AccountInfo": {
         "type": "object",
         "required": [
@@ -97,6 +117,143 @@
         ],
         "discriminator": {
           "propertyName": "objectType"
+        }
+      },
+      "ActivityParams": {
+        "type": "object",
+        "required": [
+          "activityId"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          }
+        }
+      },
+      "ActivityProfileIdParams": {
+        "type": "object",
+        "required": [
+          "activityId",
+          "profileId"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          },
+          "profileId": {
+            "type": "string",
+            "description": "The profile id associated with this Profile document."
+          }
+        }
+      },
+      "ActivityProfileParams": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ActivityProfileIdParams"
+          },
+          {
+            "$ref": "#/components/schemas/ActivityProfileSinceParams"
+          }
+        ]
+      },
+      "ActivityProfileSinceParams": {
+        "type": "object",
+        "required": [
+          "activityId"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only ids of activity stored since the specified Timestamp (exclusive) are returned."
+          }
+        }
+      },
+      "ActivityStateDeleteParams": {
+        "type": "object",
+        "required": [
+          "activityId",
+          "agent"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          },
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "registration": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The registration associated with this state."
+          },
+          "stateId": {
+            "type": "string",
+            "description": "The id for this state, within the given context.\nIf not specified, deletes all state data for this context (Activity + Agent [+ registration if specified])."
+          }
+        }
+      },
+      "ActivityStateIdParams": {
+        "type": "object",
+        "required": [
+          "activityId",
+          "agent",
+          "stateId"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          },
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "registration": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The registration associated with this state."
+          },
+          "stateId": {
+            "type": "string",
+            "description": "The id for this state, within the given context."
+          }
+        }
+      },
+      "ActivityStateParams": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ActivityStateIdParams"
+          },
+          {
+            "$ref": "#/components/schemas/ActivityStateSinceParams"
+          }
+        ]
+      },
+      "ActivityStateSinceParams": {
+        "type": "object",
+        "required": [
+          "activityId",
+          "agent"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/components/schemas/Iri"
+          },
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "registration": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The registration associated with this state."
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only ids of states stored since the specified Timestamp (exclusive) are returned."
+          }
         }
       },
       "ActorObject": {
@@ -198,6 +355,59 @@
           }
         },
         "additionalProperties": false
+      },
+      "AgentParams": {
+        "type": "object",
+        "required": [
+          "agent"
+        ],
+        "properties": {
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          }
+        }
+      },
+      "AgentProfileIdParams": {
+        "type": "object",
+        "required": [
+          "agent",
+          "profileId"
+        ],
+        "properties": {
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "profileId": {
+            "type": "string",
+            "description": "The profile id associated with this Profile document."
+          }
+        }
+      },
+      "AgentProfileParams": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/AgentProfileIdParams"
+          },
+          {
+            "$ref": "#/components/schemas/AgentProfileSinceParams"
+          }
+        ]
+      },
+      "AgentProfileSinceParams": {
+        "type": "object",
+        "required": [
+          "agent"
+        ],
+        "properties": {
+          "agent": {
+            "$ref": "#/components/schemas/AgentObject"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only ids of states stored since the specified Timestamp (exclusive) are returned."
+          }
+        }
       },
       "AnyObject": {
         "oneOf": [
@@ -749,8 +959,7 @@
         "format": "uri"
       },
       "Language": {
-        "type": "string",
-        "format": "date-time"
+        "type": "string"
       },
       "LanguageMap": {
         "type": "object",
@@ -1107,6 +1316,53 @@
         },
         "additionalProperties": false
       },
+      "Person": {
+        "type": "object",
+        "required": [
+          "objectType"
+        ],
+        "properties": {
+          "account": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountInfo"
+            },
+            "description": "List of account objects that uniquely identify the Agents retrieved."
+          },
+          "mbox": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MBox"
+            },
+            "description": "List of e-mail addresses of Agents retrieved."
+          },
+          "mbox_sha1sum": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MBoxSha1sum"
+            },
+            "description": "List of the SHA1 hashes of mailto IRIs (such as go in an mbox property)."
+          },
+          "name": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of names of Agents retrieved."
+          },
+          "objectType": {
+            "type": "string",
+            "description": "This has to be \"Person\""
+          },
+          "openid": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenId"
+            },
+            "description": "List of openids that uniquely identify the Agents retrieved."
+          }
+        }
+      },
       "Score": {
         "type": "object",
         "description": "Represents the outcome of a graded Activity achieved by an Agent.",
@@ -1296,6 +1552,27 @@
         },
         "additionalProperties": false
       },
+      "StatementBody": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Statement"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Statement"
+            }
+          }
+        ]
+      },
+      "StatementFormat": {
+        "type": "string",
+        "enum": [
+          "ids",
+          "exact",
+          "canonical"
+        ]
+      },
       "StatementRef": {
         "type": "object",
         "required": [
@@ -1341,6 +1618,128 @@
           "success": {
             "type": "boolean",
             "description": "Indicates whether or not the attempt on the Activity was successful."
+          }
+        }
+      },
+      "StatementsParams": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "agent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AgentObject"
+              }
+            ]
+          },
+          "ascending": {
+            "type": "boolean",
+            "description": "If true, return results in ascending order of stored time."
+          },
+          "attachments": {
+            "type": "boolean",
+            "description": "If true, the LRS uses the multipart response format and includes all attachments as described previously. If false, the LRS sends the prescribed response with Content-Type application/json and does not send attachment data."
+          },
+          "ci": {
+            "type": "string",
+            "format": "uuid",
+            "description": "None standard to support paging"
+          },
+          "ct": {
+            "type": "string",
+            "format": "date-time",
+            "description": "None standard to support paging"
+          },
+          "format": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementFormat"
+              }
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of Statements to return. 0 indicates return the maximum the server allows.",
+            "minimum": 0
+          },
+          "registration": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Filter, only return Statements matching the specified registration id. Note that although frequently a unique registration is used for one Actor assigned to one Activity, this cannot be assumed. If only Statements for a certain Actor or Activity are required, those parameters also need to be specified."
+          },
+          "related_activities": {
+            "type": "boolean",
+            "description": "Apply the Agent filter broadly. Include Statements for which the Actor, Object, Authority, Instructor, Team, Context Agent, Context Group, or any of these properties in a contained SubStatement match the Agent parameter, instead of that parameter's normal behavior. Matching is defined in the same way it is for the \"agent\" parameter."
+          },
+          "related_agents": {
+            "type": "boolean",
+            "description": "Apply the Agent filter broadly. Include Statements for which the Actor, Object, Authority, Instructor, Team, Context Agent, Context Group, or any of these properties in a contained SubStatement match the Agent parameter, instead of that parameter's normal behavior. Matching is defined in the same way it is for the \"agent\" parameter."
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only Statements stored since the specified Timestamp (exclusive) are returned."
+          },
+          "statementId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Id of Statement to fetch."
+          },
+          "until": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only Statements stored at or before the specified Timestamp are returned."
+          },
+          "verb": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Iri"
+              }
+            ]
+          },
+          "voidedStatementId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Id of voided Statement to fetch."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatementsPutParams": {
+        "type": "object",
+        "required": [
+          "statementId"
+        ],
+        "properties": {
+          "statementId": {
+            "type": "string",
+            "description": "Id of Statement to fetch."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatementsResult": {
+        "type": "object",
+        "required": [
+          "statements"
+        ],
+        "properties": {
+          "more": {
+            "type": "string",
+            "description": "Relative IRL that can be used to fetch more results, including the full path and optionally a query string but excluding scheme, host, and port.\nEmpty string if there are no more results to fetch."
+          },
+          "statements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Statement"
+            },
+            "description": "List of Statements. If the list returned has been limited (due to pagination), and there are more results, they will be located at the \"statements\" property within the container located at the IRL provided by the \"more\" property of this Statement result Object.\nWhere no matching Statements are found, this property will contain an empty array."
           }
         }
       },
